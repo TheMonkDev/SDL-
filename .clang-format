@@ -1,0 +1,2 @@
+BasedOnStyle: Google  # or any other base style you prefer
+ColumnLimit: 100
