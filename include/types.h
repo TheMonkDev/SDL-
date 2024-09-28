@@ -19,15 +19,16 @@ typedef struct Color {
   Color(int r, int g, int b, int a = 255) : r(r), g(g), b(b), a(a) {};
 } Color;
 
-enum class BorderDirection {
-  top, right, bottom, left
-};
+enum class BorderDirection { top = 0, right = 1, bottom = 2, left = 3 };
 
 typedef struct BorderSideConfig {
   int thickness = 0;
   Color color;
   BorderDirection borderDirection;
-  BorderSideConfig(BorderDirection direction): borderDirection(direction) {};
+  BorderSideConfig() {};
+  BorderSideConfig(BorderDirection direction) : borderDirection(direction) {};
+  BorderSideConfig(int thickness, Color color, BorderDirection direction)
+      : thickness(thickness), color(color), borderDirection(direction) {};
 } BorderSideConfig;
 
 typedef struct RadiusConfig {
@@ -35,11 +36,23 @@ typedef struct RadiusConfig {
 } RadiusConfig;
 
 typedef struct BorderConfig {
-  BorderSideConfig top = BorderSideConfig(BorderDirection::top);
-  BorderSideConfig left = BorderSideConfig(BorderDirection::left);
-  BorderSideConfig bottom = BorderSideConfig(BorderDirection::bottom);
-  BorderSideConfig right = BorderSideConfig(BorderDirection::right);
+  BorderSideConfig top;
+  BorderSideConfig left;
+  BorderSideConfig bottom;
+  BorderSideConfig right;
   RadiusConfig topLeft, topRight, bottomRight, bottomLeft;
+  BorderConfig() {
+    top = BorderSideConfig(BorderDirection::top);
+    left = BorderSideConfig(BorderDirection::left);
+    bottom = BorderSideConfig(BorderDirection::bottom);
+    right = BorderSideConfig(BorderDirection::right);
+  }
+  BorderConfig(int thickness, Color color) {
+    top = BorderSideConfig(thickness, color, BorderDirection::top);
+    right = BorderSideConfig(thickness, color, BorderDirection::right);
+    left = BorderSideConfig(thickness, color, BorderDirection::left);
+    bottom = BorderSideConfig(thickness, color, BorderDirection::bottom);
+  }
 } BorderConfig;
 
 #endif

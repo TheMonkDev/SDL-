@@ -56,7 +56,7 @@ void Element::setBorders(BorderConfig* borderConfig) {
   if (this->borders != borderConfig) {
     delete this->borders;
   }
-  this->borders = borders;
+  this->borders = borderConfig;
 }
 
 void Element::setColor(Color* color) {
@@ -83,50 +83,52 @@ BorderConfig* Element::getBorders() { return this->borders; }
 void Element::drawBorder(BorderSideConfig borderSide) {
   int thickness = borderSide.thickness;
   int startX, startY, width, height;
+  int distance = (int)sqrt(2) * thickness;
 
   switch (borderSide.borderDirection) {
     case BorderDirection::top:
     case BorderDirection::bottom:
-      width = this->dimension->width;
+      width = this->dimension->width + distance;
       height = thickness;
       break;
 
     case BorderDirection::right:
     case BorderDirection::left:
       width = thickness;
-      height = this->dimension->height;
+      height = this->dimension->height + distance;
       break;
   }
 
-  int distance = (int)sqrt(2) * thickness, signX = 1, signY = 1;
 
   switch (borderSide.borderDirection) {
     case BorderDirection::top:
-      signX = -1;
-      signY = -1;
+      startX = this->position->x - distance;
+      startY = this->position->y - distance;
       break;
 
     case BorderDirection::right:
-      signX = 1;
-      signY = -1;
+      startX = this->position->x + this->dimension->width;
+      startY = this->position->y - distance;
       break;
 
     case BorderDirection::bottom:
-      signX = 1;
-      signY = 1;
+      startX = this->position->x;
+      startY = this->position->y + this->dimension->height;
       break;
 
     case BorderDirection::left:
-      signX = -1;
-      signY = 1;
+      startX = this->position->x - distance;
+      startY = this->position->y;
       break;
 
     default:
       break;
   }
 
-  startX = this->position->x + signX * distance;
-  startY = this->position->x + signY * distance;
+  // if (this->parent != nullptr) {
+  //   std::cout << "Border Info: " << (int)borderSide.borderDirection << " " << startX << " " << startY << " " << width << " " << height << std::endl;
+  //   std::cout << "Color: " << borderSide.color.r << " " << borderSide.color.g << " " << borderSide.color.b << " " << borderSide.color.a << std::endl;
+  // }
 
   SDL_Rect borderRect;
   borderRect.x = startX;
@@ -135,7 +137,7 @@ void Element::drawBorder(BorderSideConfig borderSide) {
   borderRect.h = height;
   SDL_SetRenderDrawColor(this->renderer, borderSide.color.r, borderSide.color.g, borderSide.color.b,
                          borderSide.color.a);
-  SDL_RenderDrawRect(this->renderer, &borderRect);
+  SDL_RenderFillRect(this->renderer, &borderRect);
 }
 
 void Element::drawBorders() {
