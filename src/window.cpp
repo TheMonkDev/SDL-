@@ -31,7 +31,8 @@ Window* Window::getWindow() {
     return nullptr;
   }
 
-  window->renderer = SDL_CreateRenderer(window->window, -1, SDL_RENDERER_ACCELERATED);
+  window->renderer =
+      SDL_CreateRenderer(window->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   if (!window->renderer) {
     delete window;
     return nullptr;
