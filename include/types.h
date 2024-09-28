@@ -19,9 +19,15 @@ typedef struct Color {
   Color(int r, int g, int b, int a = 255) : r(r), g(g), b(b), a(a) {};
 } Color;
 
+enum class BorderDirection {
+  top, right, bottom, left
+};
+
 typedef struct BorderSideConfig {
   int thickness = 0;
   Color color;
+  BorderDirection borderDirection;
+  BorderSideConfig(BorderDirection direction): borderDirection(direction) {};
 } BorderSideConfig;
 
 typedef struct RadiusConfig {
@@ -29,7 +35,10 @@ typedef struct RadiusConfig {
 } RadiusConfig;
 
 typedef struct BorderConfig {
-  BorderSideConfig top, left, bottom, right;
+  BorderSideConfig top = BorderSideConfig(BorderDirection::top);
+  BorderSideConfig left = BorderSideConfig(BorderDirection::left);
+  BorderSideConfig bottom = BorderSideConfig(BorderDirection::bottom);
+  BorderSideConfig right = BorderSideConfig(BorderDirection::right);
   RadiusConfig topLeft, topRight, bottomRight, bottomLeft;
 } BorderConfig;
 
